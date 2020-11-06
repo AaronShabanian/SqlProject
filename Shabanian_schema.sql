@@ -1,32 +1,34 @@
-
-
 CREATE TABLE carModels (
-  carID int,
+  carID int PRIMARY KEY,
   carName varchar(255),
+  companyName varchar(255),
   msrp float,
-  type varchar(255)
+  type varchar(255),
+  FOREIGN KEY (companyName) REFERENCES companies(companyName)
 );
 
 CREATE TABLE companies (
   companyName varchar(255),
-  carID int,
+  companyID int PRIMARY KEY,
   marketCap float,
-  dateFounded Date
+  currentCeo varchar(255)
 );
 
-CREATE TABLE purchasers (
+CREATE TABLE purchases (
   purchaserName varchar(255),
-  purchaseID int,
+  purchaseID int PRIMARY KEY,
   carID int,
   amountPaid float,
   leaseOrBuy varchar(255),
-  dateOfPurchase Date
+  dateOfPurchase Date,
+  FOREIGN KEY (carID) REFERENCES carModels(carID)
 );
 
-CREATE TABLE sellers (
+CREATE TABLE sales (
   sellerName varchar(255),
-  saleID int,
+  saleID int PRIMARY KEY,
   carID int,
   saleDeal float,
-  dateOfSale Date
+  dateOfSale Date,
+  FOREIGN KEY (carID) REFERENCES carModels(carID)
 );
