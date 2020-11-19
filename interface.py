@@ -128,7 +128,7 @@ def numberOfModels(conn):
     conn.commit()
 
 def printInfo(conn):
-    sql="SELECT * from sales natual join carModels"
+    sql="SELECT * from sales natural join carModels"
     cur = conn.cursor()
     cur.execute(sql)
     result=cur.fetchall()
