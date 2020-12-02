@@ -1,7 +1,6 @@
 CREATE TABLE companies (
   companyName varchar(255) UNIQUE,
   companyID int PRIMARY KEY,
-  marketCap float,
   currentCeo varchar(255)
 );
 
