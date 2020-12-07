@@ -1,7 +1,9 @@
 import random
 import names
+import time
+import string
 #Companies
-
+print(time.perf_counter())
 data = open("data.sql", "w")
 companyBase="INSERT INTO companies(companyName, companyID, currentCeo) VALUES "
 companyNames=["Acura", "Alfa Romeo", "Audi", "BMW", "Bentley", "Buick", "Cadillac", "Chevrolet", "Chrysler", "Dodge", "Fiat" , "Ford", "GMC", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Maserati", "Mazda", "Mercedes-Benz", "Mercury", "Mini", "Mitsubishi", "Nikola", "Nissan", "Polestar", "Pontiac", "Porche", "Ram", "Rivian", "Rolls-Royce", "Saab", "Saturn", "Scion", "Smart", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo"]
@@ -15,6 +17,7 @@ for i in range(len(companyNames)):
         companyBase+=","
 data.write(companyBase)
 data.write("\n ")
+print(time.perf_counter())
 #Car Models
 carModelBase="INSERT INTO carModels(carID, carName, companyName, msrp, type) VALUES" 
 Acura=["Acura", "ILX 25950 compact", "TLX 37500 sedan", "RLX 54900 sedan", "RDX 38200 crossover", "MDX 44500 suv", "NSX 157500 supercar"]
@@ -73,26 +76,133 @@ for j in range(1000000):
         carModelBase+="," 
 carModelBase+="\n"
 data.write(carModelBase)
+data.write("\n ")
 
+print(time.perf_counter())
 #Purchases 
 
 purchaseBase="INSERT INTO purchases(purchaserName, purchaseID, carID, amountPaid, leaseOrBuy, dateOfPurchase) VALUES" 
-carIds=random.sample(range(100001),100000)
+carIds=random.sample(range(150001),150000)
 ways=["lease", "buy"]
-for i in range(100000): 
-
+for i in range(150000): 
     name=names.get_full_name()
     purchaseBase+="\n"
     variance=random.randrange(-10, 6)
-    payment=float(prices[carIds[i]])+(float(variance)*.1)
+    payment=float(prices[carIds[i]])+(prices[carIds[i]]*float(variance)*.01)
     way=random.choice(ways)
     month=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
     year="2019"
     day=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"])
     date=year+"-"+month+"-"+day
-    purchaseBase+="('"+ str(name)+ "', " + str(i) + ", " + str(carIds[i])+ ", " +str(payment)+", '"+ str(way) +"', '" + str(date) +"')"
-    if(i==100000-1):
+    purchaseBase+="('"+ str(name)+ "', " + str(i+1) + ", " + str(carIds[i])+ ", " +str(payment)+", '"+ str(way) +"', '" + str(date) +"')"
+    if(i==150000-1):
         purchaseBase+=";"
     else:
         purchaseBase+=","
 data.write(purchaseBase)
+data.write("\n ")
+print(time.perf_counter())
+#Sales
+salesBase="INSERT INTO sales(sellerName, saleId, carID, saleDeal, dateOfSale) VALUES"
+carIds2=random.sample(range(100001),100000)
+for i in range(100000):
+    name=names.get_full_name()
+    salesBase+="\n"
+    month=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
+    year="2019"
+    day=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"])
+    date=year+"-"+month+"-"+day
+    variance=random.randrange(-15, 1)
+    payment=float(prices[carIds[i]])+(prices[carIds[i]]*float(variance)*.01)
+    salesBase+="('"+ str(name)+ "', " + str(i+1) + ", " + str(carIds2[i])+ ", " +str(payment)+", '" + str(date) +"')"
+    if(i==100000-1):
+        salesBase+=";"
+    else:
+        salesBase+=","
+data.write(salesBase)
+print(time.perf_counter())
+#Employees
+employeeBase="INSERT INTO Employees(employeeName, employeeID, jobTitle, hourlyPay, hoursWorked, totalPay) VALUES"
+jobs=["Manager", "Dealer", "Financer", "Cleaner"]
+for i in range(100):
+    name=names.get_full_name()
+    if(i%15==0):
+        job=jobs[0]
+        hourlyPay=50
+    elif(i%2==0):
+        job=jobs[1]
+        hourlyPay=37
+    elif(i%7==0):
+        job=jobs[3]
+        hourlyPay=15
+    else:
+        job=jobs[2]
+        hourlyPay=32
+    avg=1812
+    variance=random.randrange(-15, 15)
+    hours=float(avg)+float(variance*.01*avg)
+    totalPay=float(hours)*float(hourlyPay)
+    employeeBase+="\n"
+    employeeBase+="('"+name+"', "+str(i+1)+", '"+job+"', "+str(hourlyPay)+", "+str(hours)+", "+ str(totalPay)+ ")"
+    if(i==100-1):
+        employeeBase+=";"
+    else:
+        employeeBase+=","
+data.write(employeeBase)
+data.write("\n ")
+print(time.perf_counter())
+#testDrive
+
+testdriveBase="INSERT INTO testDrives(driverName, driverID, driverEmail, driverPhone, driverAge, carID, dateOfDrive, timeOfDrive, employeeID, testDriveId) VALUES"
+for i in range(1000):
+    name=names.get_full_name()
+    username=''.join(random.choice(string.ascii_letters) for x in range(7))
+    email=username+"@gmail.com"
+    phone="555"+str(random.randrange(1000, 9999))
+    age=random.randrange(18, 85)
+    driverID=random.randrange(100000, 999999)
+    carID=random.randrange(1,1000000)
+    month=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
+    year="2019"
+    day=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"])
+    date=year+"-"+month+"-"+day
+    hour=random.choice(["09", "10", "11", "12", "13", "14", "15", "16", "17", "18"])
+    minute=random.choice(["00", "15", "30", "45"])
+    time=hour+":"+minute+":00"
+    employeeId=random.choice([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 92, 94, 96, 98, 100])
+    testdriveBase+="\n"
+    testdriveBase+="('"+str(name)+"', "+str(driverID)+", '"+str(email)+"', "+str(phone)+", "+str(age)+", "+ str(carID)+", '"+date+"', '"+time+"', "+ str(employeeId)+ ", "+str(i)+")"
+    if(i==100-1):
+        testdriveBase+=";"
+    else:
+        testdriveBase+=","
+data.write(testdriveBase)
+time.perf_counter()
+
+#Service Cars
+
+serviceBase="INSERT INTO serviceCars(problem, appointmentId, carID, timeOfService, dateOfService, customerName, estimatedCost) VALUES"
+
+for i in range(1000):
+    name=names.get_full_name()
+    problemIndex=random.randrange(0, 6)
+    possibilities=["Flat Tire", "Engine Problems", "Broken Windshield", "Scratch", "Paint Chip", "Software Bug"]
+    problems=possibilities[problemIndex]
+    payments=["50", "5000", "100", "500", "300", "0"]
+    carID=random.randrange(0, 1500000)
+    hour=random.choice(["09", "10", "11", "12", "13", "14", "15", "16", "17", "18"])
+    minute=random.choice(["00", "15", "30", "45"])
+    time=hour+":"+minute+":00"
+    month=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
+    year="2019"
+    day=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"])
+    cost=payments[problemIndex]
+    date=year+"-"+month+"-"+day
+    serviceBase+="\n"
+    serviceBase+="('"+problems+"', "+str(i)+", "+carID+", '"+time+"', '"+date+"', '"+ name+"', "+str(cost)+")"
+    if(i==100-1):
+        serviceBase+=";"
+    else:
+        serviceBase+=","
+data.write(serviceBase)
+time.perf_counter()
