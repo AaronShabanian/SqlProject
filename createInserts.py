@@ -1,9 +1,11 @@
 import random
-import names
-import time
 import string
+#list of names
+print("Generation of inserts taking place ETA:2 min 15sec ")
+firstNames=[ "Adam", "Alex", "Aaron", "Ben", "Carl", "Dan", "David", "Edward", "Fred", "Frank", "George", "Hal", "Hank", "Ike", "John", "Jack", "Joe", "Larry", "Monte", "Matthew", "Mark", "Nathan", "Otto", "Paul", "Peter", "Roger", "Roger", "Steve", "Thomas", "Tim", "Ty", "Victor", "Walter"]
+lastNames=["Anderson", "Ashwoon", "Aikin", "Bateman", "Bongard", "Bowers", "Boyd", "Cannon", "Cast", "Deitz", "Dewalt", "Ebner", "Frick", "Hancock", "Haworth", "Hesch", "Hoffman", "Kassing", "Knutson", "Lawless", "Lawicki", "Mccord", "McCormack", "Miller", "Myers", "Nugent", "Ortiz", "Orwig", "Ory", "Paiser", "Pak", "Pettigrew", "Quinn", "Quizoz", "Ramachandran", "Resnick", "Sagar", "Schickowski", "Schiebel", "Sellon", "Severson", "Shaffer", "Solberg", "Soloman", "Sonderling", "Soukup", "Soulis", "Stahl", "Sweeney", "Tandy", "Trebil", "Trusela", "Trussel", "Turco", "Uddin", "Uflan", "Ulrich", "Upson", "Vader", "Vail", "Valente", "Van Zandt", "Vanderpoel", "Ventotla", "Vogal", "Wagle", "Wagner", "Wakefield", "Weinstein", "Weiss", "Woo", "Yang", "Yates", "Yocum", "Zeaser", "Zeller", "Ziegler", "Bauer", "Baxster", "Casal", "Cataldi", "Caswell", "Celedon", "Chambers", "Chapman", "Christensen", "Darnell", "Davidson", "Davis", "DeLorenzo", "Dinkins", "Doran", "Dugelman", "Dugan", "Duffman", "Eastman", "Ferro", "Ferry", "Fletcher", "Fietzer", "Hylan", "Hydinger", "Illingsworth", "Ingram", "Irwin", "Jagtap", "Jenson", "Johnson", "Johnsen", "Jones", "Jurgenson", "Kalleg", "Kaskel", "Keller", "Leisinger", "LePage", "Lewis", "Linde", "Lulloff", "Maki", "Martin", "McGinnis", "Mills", "Moody", "Moore", "Napier", "Nelson", "Norquist", "Nuttle", "Olson", "Ostrander", "Reamer", "Reardon", "Reyes", "Rice", "Ripka", "Roberts", "Rogers", "Root", "Sandstrom", "Sawyer", "Schlicht", "Schmitt", "Schwager", "Schutz", "Schuster", "Tapia", "Thompson", "Tiernan", "Tisler"]
+
 #Companies
-print(time.perf_counter())
 data = open("data.sql", "w")
 companyBase="INSERT INTO companies(companyName, companyID, currentCeo) VALUES "
 companyNames=["Acura", "Alfa Romeo", "Audi", "BMW", "Bentley", "Buick", "Cadillac", "Chevrolet", "Chrysler", "Dodge", "Fiat" , "Ford", "GMC", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Maserati", "Mazda", "Mercedes-Benz", "Mercury", "Mini", "Mitsubishi", "Nikola", "Nissan", "Polestar", "Pontiac", "Porche", "Ram", "Rivian", "Rolls-Royce", "Saab", "Saturn", "Scion", "Smart", "Subaru", "Suzuki", "Tesla", "Toyota", "Volkswagen", "Volvo"]
@@ -15,11 +17,12 @@ for i in range(len(companyNames)):
         companyBase+=";"
     else:
         companyBase+=","
+data.write("set global max_allowed_packet=268435456;")
+data.write("\n ")
 data.write(companyBase)
 data.write("\n ")
-print(time.perf_counter())
 #Car Models
-carModelBase="INSERT INTO carModels(carID, carName, companyName, msrp, type) VALUES" 
+carModelBase="INSERT INTO carModels(carID, carName, companyName, msrp, size) VALUES" 
 Acura=["Acura", "ILX 25950 compact", "TLX 37500 sedan", "RLX 54900 sedan", "RDX 38200 crossover", "MDX 44500 suv", "NSX 157500 supercar"]
 Alfa=["Alfa Romeo", "Stelvio 41400 suv", "Guilia 39400 sedan", "4C_Spider 67150 sport", "Stelvio_Quadrigoglio 80500 suv", "Guilia_Quadrifoglio 74500 sedan" ]
 Audi=["Audi", "A3 33300 sedan", "S3 43000 sedan", "RS3 56200 sedan", "A4 39100 sedan", "S4 49900 sedan", "A5 41800 Sportback", "RS5 75400 Sportback", "A6 54900 sedan", "S6 74400 sedan", "Q3 34000 crossover", "Q5 43300 suv", "Q7 54950 suv", "Q8 68200 suv", "e-tron 65900 suv", "TT 49800 coupe", "R8 169900 coupe"]
@@ -78,14 +81,15 @@ carModelBase+="\n"
 data.write(carModelBase)
 data.write("\n ")
 
-print(time.perf_counter())
 #Purchases 
 
 purchaseBase="INSERT INTO purchases(purchaserName, purchaseID, carID, amountPaid, leaseOrBuy, dateOfPurchase) VALUES" 
-carIds=random.sample(range(150001),150000)
+carIds=random.sample(range(1000000),150000)
 ways=["lease", "buy"]
 for i in range(150000): 
-    name=names.get_full_name()
+    firstName=random.choice(firstNames)
+    lastName=random.choice(lastNames)
+    name=firstName+" "+lastName
     purchaseBase+="\n"
     variance=random.randrange(-10, 6)
     payment=float(prices[carIds[i]])+(prices[carIds[i]]*float(variance)*.01)
@@ -101,12 +105,13 @@ for i in range(150000):
         purchaseBase+=","
 data.write(purchaseBase)
 data.write("\n ")
-print(time.perf_counter())
 #Sales
 salesBase="INSERT INTO sales(sellerName, saleId, carID, saleDeal, dateOfSale) VALUES"
-carIds2=random.sample(range(100001),100000)
+carIds2=random.sample(range(1000000),100000)
 for i in range(100000):
-    name=names.get_full_name()
+    firstName=random.choice(firstNames)
+    lastName=random.choice(lastNames)
+    name=firstName+" "+lastName
     salesBase+="\n"
     month=random.choice(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
     year="2019"
@@ -120,12 +125,13 @@ for i in range(100000):
     else:
         salesBase+=","
 data.write(salesBase)
-print(time.perf_counter())
 #Employees
 employeeBase="INSERT INTO Employees(employeeName, employeeID, jobTitle, hourlyPay, hoursWorked, totalPay) VALUES"
 jobs=["Manager", "Dealer", "Financer", "Cleaner"]
-for i in range(100):
-    name=names.get_full_name()
+for i in range(10000):
+    firstName=random.choice(firstNames)
+    lastName=random.choice(lastNames)
+    name=firstName+" "+lastName
     if(i%15==0):
         job=jobs[0]
         hourlyPay=50
@@ -144,18 +150,20 @@ for i in range(100):
     totalPay=float(hours)*float(hourlyPay)
     employeeBase+="\n"
     employeeBase+="('"+name+"', "+str(i+1)+", '"+job+"', "+str(hourlyPay)+", "+str(hours)+", "+ str(totalPay)+ ")"
-    if(i==100-1):
+    if(i==10000-1):
         employeeBase+=";"
     else:
         employeeBase+=","
 data.write(employeeBase)
 data.write("\n ")
-print(time.perf_counter())
 #testDrive
 
 testdriveBase="INSERT INTO testDrives(driverName, driverID, driverEmail, driverPhone, driverAge, carID, dateOfDrive, timeOfDrive, employeeID, testDriveId) VALUES"
+employeeIds=random.sample([i for i in range(1,10000) if i%2==0], 1000)
 for i in range(1000):
-    name=names.get_full_name()
+    firstName=random.choice(firstNames)
+    lastName=random.choice(lastNames)
+    name=firstName+" "+lastName
     username=''.join(random.choice(string.ascii_letters) for x in range(7))
     email=username+"@gmail.com"
     phone="555"+str(random.randrange(1000, 9999))
@@ -169,27 +177,27 @@ for i in range(1000):
     hour=random.choice(["09", "10", "11", "12", "13", "14", "15", "16", "17", "18"])
     minute=random.choice(["00", "15", "30", "45"])
     time=hour+":"+minute+":00"
-    employeeId=random.choice([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 92, 94, 96, 98, 100])
     testdriveBase+="\n"
-    testdriveBase+="('"+str(name)+"', "+str(driverID)+", '"+str(email)+"', "+str(phone)+", "+str(age)+", "+ str(carID)+", '"+date+"', '"+time+"', "+ str(employeeId)+ ", "+str(i)+")"
-    if(i==100-1):
+    testdriveBase+="('"+str(name)+"', "+str(driverID)+", '"+str(email)+"', "+str(phone)+", "+str(age)+", "+ str(carID)+", '"+date+"', '"+time+"', "+ str(employeeIds[i])+ ", "+str(i)+")"
+    if(i==1000-1):
         testdriveBase+=";"
     else:
         testdriveBase+=","
 data.write(testdriveBase)
-time.perf_counter()
+data.write("\n ") 
 
 #Service Cars
 
 serviceBase="INSERT INTO serviceCars(problem, appointmentId, carID, timeOfService, dateOfService, customerName, estimatedCost) VALUES"
-
+carIds3=random.sample(range(1000000),1000)
 for i in range(1000):
-    name=names.get_full_name()
+    firstName=random.choice(firstNames)
+    lastName=random.choice(lastNames)
+    name=firstName+" "+lastName
     problemIndex=random.randrange(0, 6)
     possibilities=["Flat Tire", "Engine Problems", "Broken Windshield", "Scratch", "Paint Chip", "Software Bug"]
     problems=possibilities[problemIndex]
     payments=["50", "5000", "100", "500", "300", "0"]
-    carID=random.randrange(0, 1500000)
     hour=random.choice(["09", "10", "11", "12", "13", "14", "15", "16", "17", "18"])
     minute=random.choice(["00", "15", "30", "45"])
     time=hour+":"+minute+":00"
@@ -199,10 +207,12 @@ for i in range(1000):
     cost=payments[problemIndex]
     date=year+"-"+month+"-"+day
     serviceBase+="\n"
-    serviceBase+="('"+problems+"', "+str(i)+", "+carID+", '"+time+"', '"+date+"', '"+ name+"', "+str(cost)+")"
-    if(i==100-1):
+    serviceBase+="('"+str(problems)+"', "+str(i)+", "+str(carIds3[i])+", '"+str(time)+"', '"+str(date)+"', '"+ str(name)+"', "+str(cost)+")"
+    if(i==999):
         serviceBase+=";"
     else:
         serviceBase+=","
 data.write(serviceBase)
-time.perf_counter()
+data.write("\n ")
+
+print("Generation Complete")

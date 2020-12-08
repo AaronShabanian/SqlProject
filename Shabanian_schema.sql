@@ -7,9 +7,9 @@ CREATE TABLE companies (
 CREATE TABLE carModels (
   carID int PRIMARY KEY,
   carName varchar(255),
-  companyName varchar(255) UNIQUE,
+  companyName varchar(255),
   msrp float,
-  type varchar(255),
+  size varchar(255),
   FOREIGN KEY (companyName) REFERENCES companies(companyName)
 );
 
