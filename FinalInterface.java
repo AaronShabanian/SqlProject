@@ -2,6 +2,10 @@
 import java.sql.*;
 import java.util.Scanner;
 
+
+
+import java.lang.*;
+
 public class FinalInterface {
    // JDBC driver name and database URL
    static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -22,6 +26,11 @@ public class FinalInterface {
       //STEP 3: Open a connection
       System.out.println("Connecting to database...");
       conn = DriverManager.getConnection(DB_URL,USER,PASS);
+      //variable declarations
+      Double diff=0.0;
+      Double test1=0.0;
+      Double test2=0.0;
+      String counter="";
       String selection= "";
       String base="";
       String companyName="";
@@ -60,6 +69,8 @@ public class FinalInterface {
       String dateOfService="";
       String customerName="";
       String estimatedCost="";
+      String smallest="";
+      String biggest="";
       stmt = conn.createStatement();
       //Interface that User sees
       while (true){
@@ -68,6 +79,13 @@ public class FinalInterface {
          System.out.println("1) Print Database Info");
          System.out.println("2) Insert a row into any table");
          System.out.println("3) Delete a row of any table");
+         System.out.println("4) Update an employees hourly pay");
+         System.out.println("5) Get Car Info from carID #");
+         System.out.println("6) Find cars in yout budget");
+         System.out.println("7) Check if purchase deal was good or bad");
+         System.out.println("8) Check if sale deal was good or bad");
+         System.out.println("9) Print company info along with the number of cars that they have in the dealership");
+         System.out.println("10) Find Testdrive info from id#, along with employee information");
          selection= input.nextLine();
          if(selection.equals("1")){
             System.out.println("Tables:");
@@ -202,7 +220,7 @@ public class FinalInterface {
                }
             }
             else if(selection.equals("6")){
-               base="INSERT INTO testDrives(driverName, driverID, driverEmail, driverPhone, driverAge, carID, dateOfDrive, timeOfDrive, employeeID, testDriveId) VALUES";
+               base="INSERT INTO testDrives(driverName, driverId, driverEmail, driverPhone, driverAge, carID, dateOfDrive, timeOfDrive, employeeID, testDriveId) VALUES";
                System.out.println("Driver Name: ");
                driverName=input.nextLine();
                System.out.println("Driver Id: ");
@@ -258,6 +276,288 @@ public class FinalInterface {
                catch(SQLException e){
                   System.out.println("Could not insert row, Returning to main menu ...");
                }
+            }
+         }
+         else if(selection.equals("3")){
+            System.out.println("Enter the number of the table you would like to delete a row from:");
+            System.out.println("1) Companies");
+            System.out.println("2) carModels");
+            System.out.println("3) Purchases");
+            System.out.println("4) Sales");
+            System.out.println("5) Employees");
+            System.out.println("6) testDrives");
+            System.out.println("7) serviceCars");
+            //Deletion of specified row from table
+            selection=input.nextLine();
+            if(selection.equals("1")){
+               System.out.println("Enter comanyID of what you want to delete: ");
+               companyID=input.nextLine();
+               base="DELETE FROM companies WHERE companyID="+companyID;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+            else if(selection.equals("2")){
+               System.out.println("Enter carID: ");
+               carId=input.nextLine();
+               base="DELETE FROM carModels WHERE carID="+carId;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+            else if(selection.equals("3")){
+               System.out.println("Enter purchaseId: ");
+               purchaseId=input.nextLine();
+               base="DELETE FROM purchases WHERE purchaseID="+purchaseId;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+            else if(selection.equals("4")){
+               System.out.println("Enter saleID");
+               saleId=input.nextLine();
+               base="DELETE FROM sales WHERE saleID="+saleId;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+            else if(selection.equals("5")){
+               System.out.println("Enter Employee ID: ");
+               employeeID=input.nextLine();
+               base="DELETE FROM Employees WHERE employeeID="+employeeID;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+            else if(selection.equals("6")){
+               System.out.println("enter TestDriveId: ");
+               testDriveId=input.nextLine();
+               base="DELETE FROM testDrives WHERE testDriveID="+testDriveId;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+            else if(selection.equals("7")){
+               System.out.println("enter appointmentID");
+               appointmentId=input.nextLine();
+               base="DELETE FROM serviceCars WHERE appointmentID="+appointmentId;
+               System.out.println(base);
+               try{
+                stmt.executeUpdate(base);
+                System.out.println("Row Successfully deleted");
+               }
+               catch(SQLException e){
+                  System.out.println("Could not delete row, Returning to main menu ...");
+               }
+            }
+         }
+         else if(selection.equals("4")){
+            System.out.println("Emnployee Id: ");
+            employeeID=input.nextLine();
+            System.out.println("New Hourly Pay: ");
+            hourlyPay=input.nextLine();
+            base= "UPDATE Employees SET hourlyPay="+ hourlyPay +" WHERE employeeID="+employeeID; 
+            System.out.println(base);
+               // try{
+                stmt.executeUpdate(base);
+                System.out.println("Pay successfully updated");
+               // }
+               // catch(SQLException e){
+               //    System.out.println("Could not update row, Returning to main menu ...");
+               // }
+         }
+         else if(selection.equals("5")){
+            System.out.println("Enter carID: ");
+            carId=input.nextLine();
+            base="Select * from carModels where carID="+carId;
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  carName=rs.getString("carName");
+                  companyName=rs.getString("companyName");
+                  msrp=rs.getString("msrp");
+                  size=rs.getString("size");
+
+                  System.out.println("name: "+carName);
+                  System.out.println("Company: "+companyName);
+                  System.out.println("MSRP: "+msrp);
+                  System.out.println("Type of Car: "+size);
+               }
+               rs.close();
+            }
+            catch(SQLException e){
+               System.out.println("Could not find car, returning to menu");
+            }
+            System.out.println(" ");
+         }
+         else if(selection.equals("6")){
+            System.out.println("Enter maximum amount willing to pay: ");
+            biggest=input.nextLine();
+            System.out.println("Enter a minimim amount willing to pay: ");
+            smallest=input.nextLine();
+            base="Select Distinct carName, companyName, msrp, size from carModels where msrp>"+smallest+" and msrp<"+biggest+ " order by msrp";
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  carName=rs.getString("carName");
+                  companyName=rs.getString("companyName");
+                  msrp=rs.getString("msrp");
+                  size=rs.getString("size");
+
+                  System.out.println("name: "+carName);
+                  System.out.println("Company: "+companyName);
+                  System.out.println("MSRP: "+msrp);
+                  System.out.println("Type of Car: "+size);
+                  System.out.println("\n");
+               }
+               rs.close();
+            }
+            catch(SQLException e){
+              System.out.println("Error in your query found");
+            }
+         }
+         else if(selection.equals("7")){
+            System.out.println("Purchase Id: ");
+            purchaseId=input.nextLine();
+            base="Select amountPaid, msrp from carModels natural join purchases where purchaseID="+purchaseId;
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  amountPaid=rs.getString("amountPaid");
+                  msrp=rs.getString("msrp");
+
+                  test1=Double.parseDouble(amountPaid);
+                  test2=Double.parseDouble(msrp);
+                  diff=test1-test2;
+                  diff=Math.abs(diff);
+                  if(test1>test2){
+                     System.out.println("Overpaid by: ");
+                     System.out.println(diff);
+                  }
+                  else{
+                     System.out.println("Underpaid by: ");
+                     System.out.println(diff);
+                  }
+
+               }
+               rs.close();
+            }
+            catch(SQLException e){
+              System.out.println("Error in your query found");
+            }
+
+         }
+         else if(selection.equals("8")){
+            System.out.println("Sale Id: ");
+            saleId=input.nextLine();
+            base="Select saleDeal, msrp from carModels natural join sales where saleID="+saleId;
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  saleDeal=rs.getString("saleDeal");
+                  msrp=rs.getString("msrp");
+
+                  test1=Double.parseDouble(saleId);
+                  test2=Double.parseDouble(msrp);
+                  diff=test1-test2;
+                  diff=Math.abs(diff);
+                  if(test1>test2){
+                     System.out.println("Overpaid by: ");
+                     System.out.println(diff);
+                  }
+                  else{
+                     System.out.println("Underpaid by: ");
+                     System.out.println(diff);
+                  }
+
+               }
+               rs.close();
+            }
+             catch(SQLException e){
+               System.out.println("Error in your query found");
+             }
+         }
+         else if(selection.equals("9")){
+            System.out.println("Company Id: ");
+            companyID=input.nextLine();
+            base="SELECT companyName, currentCeo, count(carID) from companies natural join carModels where companyID="+companyID;
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  companyName=rs.getString("companyName");
+                  ceo=rs.getString("currentCeo");
+                  counter=rs.getString("count(carID)");
+                  System.out.println("Company Name: "+companyName);
+                  System.out.println("CEO: "+ceo);
+                  System.out.println("Amount of cars in inventory: "+counter);
+               }
+               rs.close();
+            }
+            catch(SQLException e){
+               System.out.println("Error Detected");
+            }
+         }
+         else if(selection.equals("10")){
+            System.out.println("testDrive Id: ");
+            testDriveId=input.nextLine();
+            base="SELECT * FROM testDrives natural join employees natural join carModels where testDriveId="+testDriveId;
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  driverName=rs.getString("driverName");
+                  driverID=rs.getString("driverId");
+                  driverEmail=rs.getString("driverEmail");
+                  driverPhone=rs.getString("driverPhone");
+                  carId=rs.getString("carID");
+                  dateOfDrive=rs.getString("dateOfDrive");
+                  timeOfDrive=rs.getString("timeOfDrive");
+                  employeeID=rs.getString("employeeID");
+                  employeeName=(rs.getString("employeeName"));
+                  jobTitle=rs.getString("jobTitle");
+                  carName=rs.getString("carName");
+                  System.out.println("Driver Name: "+ driverName);
+                  System.out.println("DriverId: "+driverID);
+                  System.out.println("Driver Email: "+driverEmail);
+                  System.out.println("Driver Phone: "+driverPhone);
+                  System.out.println("carId: "+carId);
+                  System.out.println("Model: "+carName);
+                  System.out.println("Designated Employee: "+employeeName+" ID: "+employeeID+" Job Title: "+jobTitle);
+
+               }
+               rs.close();
+            }
+            catch(SQLException e){
+               System.out.println("Error Detected");
             }
          }
          break;
@@ -319,7 +619,6 @@ public class FinalInterface {
       // preparedStatement3.executeUpdate();
       //System.out.println("CPSC230 has been deleted");
       //STEP 6: Clean-up environment
-      // rs.close();
       // rs2.close();
       stmt.close();
       conn.close();
