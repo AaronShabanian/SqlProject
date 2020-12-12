@@ -385,6 +385,7 @@ public class FinalInterface {
             }
          }
          else if(selection.equals("4")){
+            //UPDATE PAY
             System.out.println("Emnployee Id: ");
             employeeID=input.nextLine();
             System.out.println("New Hourly Pay: ");
@@ -410,6 +411,7 @@ public class FinalInterface {
                 }
          }
          else if(selection.equals("5")){
+            //GET CAR INFO
             System.out.println("Enter carID: ");
             carId=input.nextLine();
             base="Select * from carModels where carID="+carId;
@@ -434,6 +436,7 @@ public class FinalInterface {
             System.out.println(" ");
          }
          else if(selection.equals("6")){
+            //FILTER CARS
             System.out.println("Enter maximum amount willing to pay: ");
             biggest=input.nextLine();
             System.out.println("Enter a minimim amount willing to pay: ");
@@ -460,6 +463,7 @@ public class FinalInterface {
             }
          }
          else if(selection.equals("7")){
+            //Purchase Info
             System.out.println("Purchase Id: ");
             purchaseId=input.nextLine();
             base="Select amountPaid, msrp from carModels natural join purchases where purchaseID="+purchaseId;
@@ -491,6 +495,7 @@ public class FinalInterface {
 
          }
          else if(selection.equals("8")){
+            //Gets Sale Deal Profitability
             System.out.println("Sale Id: ");
             saleId=input.nextLine();
             base="Select saleDeal, msrp from carModels natural join sales where saleID="+saleId;
@@ -521,6 +526,7 @@ public class FinalInterface {
              }
          }
          else if(selection.equals("9")){
+            //Gets Company INFO
             System.out.println("Company Id: ");
             companyID=input.nextLine();
             base="SELECT companyName, currentCeo, count(carID) from companies natural join carModels where companyID="+companyID;
@@ -541,6 +547,7 @@ public class FinalInterface {
             }
          }
          else if(selection.equals("10")){
+            //Gets Test Drive Info
             System.out.println("testDrive Id: ");
             testDriveId=input.nextLine();
             base="SELECT * FROM testDrives natural join employees natural join carModels where testDriveId="+testDriveId;
@@ -574,6 +581,7 @@ public class FinalInterface {
             }
          }
          else if(selection.equals("11")){
+            //GETS average Pay
             base="SELECT jobTitle, AVG(totalPay) as avgPay FROM Employees group by jobTitle";
             try{
                ResultSet rs = stmt.executeQuery(base);
@@ -590,6 +598,7 @@ public class FinalInterface {
 
          }
          else if(selection.equals("12")){
+            //GETS Cash Flow
             base="SELECT sum(amountPaid), sum(totalPay), sum(saleDeal) from purchases natural join carModels natural join testDrives natural join Employees natural join Sales";
             try{
                ResultSet rs = stmt.executeQuery(base);
