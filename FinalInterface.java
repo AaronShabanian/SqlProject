@@ -71,6 +71,7 @@ public class FinalInterface {
       String estimatedCost="";
       String smallest="";
       String biggest="";
+      Double cashFlow=0.0;
       stmt = conn.createStatement();
       //Interface that User sees
       while (true){
@@ -86,6 +87,9 @@ public class FinalInterface {
          System.out.println("8) Check if sale deal was good or bad");
          System.out.println("9) Print company info along with the number of cars that they have in the dealership");
          System.out.println("10) Find Testdrive info from id#, along with employee information");
+         System.out.println("11) Find average pay for each job type");
+         System.out.println("12) Find Net cash flow of the dealership (Money In- Money Out");
+         System.out.println(("13) Quit Program"));
          selection= input.nextLine();
          if(selection.equals("1")){
             System.out.println("Tables:");
@@ -139,7 +143,7 @@ public class FinalInterface {
                msrp=input.nextLine();
                System.out.println("size: ");
                size=input.nextLine();
-               base+="("+ carId+ ", '"+carName+"', '"+companyName+ "', "+msrp+", '"+size+"')";
+               base+="("+ carId+ ", '"+carName+"', '"+companyName+ "', "+msrp+", '"+size+ "')";
                System.out.println(base);
                try{
                 stmt.executeUpdate(base);
@@ -207,9 +211,8 @@ public class FinalInterface {
                hourlyPay=input.nextLine();
                System.out.println("Hours Worked: ");
                hoursWorked=input.nextLine();
-               System.out.println("Total Pay: ");
-               totalPay=input.nextLine();
-               base+="('"+employeeName+"', "+employeeID+", '"+jobTitle+"', "+hourlyPay+", "+hoursWorked+", "+ totalPay+ ")";
+               
+               base+="('"+employeeName+"', "+employeeID+", '"+jobTitle+"', "+hourlyPay+", "+hoursWorked+", 0 )";
                System.out.println(base);
                try{
                 stmt.executeUpdate(base);
@@ -386,7 +389,17 @@ public class FinalInterface {
             employeeID=input.nextLine();
             System.out.println("New Hourly Pay: ");
             hourlyPay=input.nextLine();
-            base= "UPDATE Employees SET hourlyPay="+ hourlyPay +" WHERE employeeID="+employeeID; 
+            base="Select hoursWorked from Employees where employeeID="+employeeID;
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  hoursWorked=rs.getString("hoursWorked");
+               }
+            }
+            catch(SQLException e){
+               System.out.println("Error");
+            }
+            base= "UPDATE Employees SET hourlyPay="+ hourlyPay+", totalPay="+ String.valueOf(Double.parseDouble(hourlyPay)*Double.parseDouble(hoursWorked))+" WHERE employeeID="+employeeID; 
             System.out.println(base);
                // try{
                 stmt.executeUpdate(base);
@@ -560,66 +573,47 @@ public class FinalInterface {
                System.out.println("Error Detected");
             }
          }
-         break;
+         else if(selection.equals("11")){
+            base="SELECT jobTitle, AVG(totalPay) as avgPay FROM Employees group by jobTitle";
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  totalPay=rs.getString("avgPay");
+                  jobTitle=rs.getString("jobTitle");
+                  System.out.println(jobTitle+": "+totalPay);
+               }
+             }
+           catch(SQLException e){
+               System.out.println("Error detected");
+
+            }
+
+         }
+         else if(selection.equals("12")){
+            base="SELECT sum(amountPaid), sum(totalPay), sum(saleDeal) from purchases natural join carModels natural join testDrives natural join Employees natural join Sales";
+            try{
+               ResultSet rs = stmt.executeQuery(base);
+               while(rs.next()){
+                  amountPaid=rs.getString("sum(amountPaid)");
+                  totalPay=rs.getString("sum(totalPay)");
+                  saleDeal=rs.getString("sum(saleDeal)");
+                  cashFlow=(Double.parseDouble(amountPaid)-((Double.parseDouble(saleDeal))+Double.parseDouble(totalPay)));
+                  System.out.println("Cash Flow: ");
+                  System.out.println(cashFlow);
+               }
+            }
+            catch(SQLException e){
+               System.out.println("Error Detected");
+            }
+         }
+         else if(selection.equals(("13"))){
+            break;
+         }
+         
+         System.out.println("\n"+"Press enter to continue");
+         input.nextLine();
       }
-      // String insertData="INSERT INTO Classes(Code, name, professor, room) VALUES ('CPSC230','Computer Science 1', 'Natalie Best', 'Keck 101'), ('CPSC231','Computer Science 2', 'Eric Linstead', 'Keck 103'), ('MATH250', 'Discrete Math', 'Andrew Moshier', 'Hashinger 110'), " +
-      // "('CPSC350','Data Structures', 'Rene German', 'Keck 112'), ('CPSC201', 'Visual Programming', 'Derek Prate', 'Keck 130'), ('CPSC298', 'Intro to Nix', 'Dr. Fahy', 'Keck 150'), ('CPSC402', 'Database Management', 'Eric Linstead', 'LL130'), "+
-      // "('Math210', 'Multivariable Calculus', 'Dr. Jipsen', 'Hashinger 150'), ('CPSC351', 'Data Communication', 'Dr. Fahy', 'Keck 142'), ('CPSC330', 'Digital Logic', 'Dr. Zao', 'Keck 150')";
-
-      // int i = stmt.executeUpdate(insertData);
-      // System.out.println("Rows Inserted: "+i);
-
-      // //Query
-      //  ResultSet rs = stmt.executeQuery("Select * from Classes where professor='Eric Linstead'");
-      //  System.out.println("Select * from Classes where professor='Eric Linstead'");
-      // //STEP 5: Extract data from result set
-      // while(rs.next()){
-      //    //Retrieve by column name
-      //    String Code  = rs.getString("Code");
-      //    String name = rs.getString("name");
-      //    String professor = rs.getString("professor");
-      //    String room = rs.getString("room");
-
-      //    //Display values
-      //    System.out.print("Code: " + Code);
-      //    System.out.print(", Name: " + name);
-      //    System.out.print(", Professor: " + professor);
-      //    System.out.println(", Room: " + room);
-      // }
-      // String updates = "UPDATE Classes SET room=? where Code=?";
-      // PreparedStatement preparedStatement =
-      //   conn.prepareStatement(updates);
-
-      // preparedStatement.setString(1, "LL130");
-      // preparedStatement.setString(2, "CPSC231");
-      // int rowsAffected = preparedStatement.executeUpdate();
-      // System.out.println("Table update #1 sucessful");
-      // String query = "Select * from Classes where Code=?";
-      // PreparedStatement preparedStatement2 =
-      //   conn.prepareStatement(query);
-      // preparedStatement2.setString(1, "CPSC231");
-      // ResultSet rs2 =preparedStatement2.executeQuery();
-      // while(rs2.next()){
-      //    //Retrieve by column name
-      //    String Code  = rs2.getString("Code");
-      //    String name = rs2.getString("name");
-      //    String professor = rs2.getString("professor");
-      //    String room = rs2.getString("room");
-
-      //    //Display values
-      //    System.out.print("Code: " + Code);
-      //    System.out.print(", Name: " + name);
-      //    System.out.print(", Professor: " + professor);
-      //    System.out.println(", Room: " + room);
-      // }
-      // String deleterow= "Delete from Classes where Code=?";
-      // PreparedStatement preparedStatement3 =
-      //   conn.prepareStatement(deleterow);
-      // preparedStatement3.setString(1, "CPSC230");
-      // preparedStatement3.executeUpdate();
-      //System.out.println("CPSC230 has been deleted");
       //STEP 6: Clean-up environment
-      // rs2.close();
       stmt.close();
       conn.close();
    }

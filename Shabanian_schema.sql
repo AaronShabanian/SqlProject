@@ -40,8 +40,8 @@ CREATE TABLE Employees(
   hoursWorked int,
   totalPay float
 ); 
-CREATE trigger setPay after update on Employees for each row update Employees set totalpay=hoursWorked*hourlyPay;
-
+CREATE trigger setPay before INSERT on Employees for each row
+set NEW.totalPay=NEW.hoursWorked*NEW.hourlyPay;
 
 CREATE TABLE testDrives(
   driverName varchar(255),
