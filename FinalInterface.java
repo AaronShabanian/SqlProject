@@ -401,13 +401,13 @@ public class FinalInterface {
             }
             base= "UPDATE Employees SET hourlyPay="+ hourlyPay+", totalPay="+ String.valueOf(Double.parseDouble(hourlyPay)*Double.parseDouble(hoursWorked))+" WHERE employeeID="+employeeID; 
             System.out.println(base);
-               // try{
+                try{
                 stmt.executeUpdate(base);
                 System.out.println("Pay successfully updated");
-               // }
-               // catch(SQLException e){
-               //    System.out.println("Could not update row, Returning to main menu ...");
-               // }
+                }
+                catch(SQLException e){
+                   System.out.println("Could not update row, Returning to main menu ...");
+                }
          }
          else if(selection.equals("5")){
             System.out.println("Enter carID: ");
